@@ -1,0 +1,5 @@
+read -sv tests/memories/read_arst.v
+hierarchy -top top
+proc; opt;
+print_num
+write_table

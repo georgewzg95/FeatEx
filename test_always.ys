@@ -1,0 +1,5 @@
+read -sv tests/simple/always01.v
+hierarchy -top uut_always01
+proc; opt;
+print_num
+write_table
