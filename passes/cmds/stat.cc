@@ -100,7 +100,6 @@ struct statdata_t
 		for (auto cell : mod->selected_cells())
 		{
 			RTLIL::IdString cell_type = cell->type;
-                        int width = 0;
 
 			if (width_mode)
 			{
@@ -114,18 +113,15 @@ struct statdata_t
 					int width_a = cell->hasPort(ID::A) ? GetSize(cell->getPort(ID::A)) : 0;
 					int width_b = cell->hasPort(ID::B) ? GetSize(cell->getPort(ID::B)) : 0;
 					int width_y = cell->hasPort(ID::Y) ? GetSize(cell->getPort(ID::Y)) : 0;
-					//cell_type = stringf("%s_%d", cell_type.c_str(), max<int>({width_a, width_b, width_y}));
-                                        width = max<int>({width_a, width_b, width_y});
+					cell_type = stringf("%s_%d", cell_type.c_str(), max<int>({width_a, width_b, width_y}));
 				}
 				else if (cell_type.in(ID($mux), ID($pmux)))
-					//cell_type = stringf("%s_%d", cell_type.c_str(), GetSize(cell->getPort(ID::Y)));
-					width = GetSize(cell->getPort(ID::Y));
+					cell_type = stringf("%s_%d", cell_type.c_str(), GetSize(cell->getPort(ID::Y)));
 				else if (cell_type.in(
 						ID($sr), ID($ff), ID($dff), ID($dffe), ID($dffsr), ID($dffsre),
 						ID($adff), ID($adffe), ID($sdff), ID($sdffe), ID($sdffce),
 						ID($aldff), ID($aldffe), ID($dlatch), ID($adlatch), ID($dlatchsr)))
-					//cell_type = stringf("%s_%d", cell_type.c_str(), GetSize(cell->getPort(ID::Q)));
-					width =  GetSize(cell->getPort(ID::Q));
+					cell_type = stringf("%s_%d", cell_type.c_str(), GetSize(cell->getPort(ID::Q)));
 			}
 
 			if (!cell_area.empty()) {
@@ -136,11 +132,7 @@ struct statdata_t
 			}
 
 			num_cells++;
-			if (width_mode){
-				num_cells_by_type[cell_type] += width;
-			}else{
-				num_cells_by_type[cell_type]++;
-			}
+			num_cells_by_type[cell_type]++;
 		}
 
 		for (auto &it : mod->processes) {
